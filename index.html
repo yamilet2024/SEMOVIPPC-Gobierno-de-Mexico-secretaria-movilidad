@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permiso para Circular — Validación | SEMOVI CDMX</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', Helvetica, sans-serif;
+        }
+        body {
+            background: #f8f8f8;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .contenedor {
+            max-width: 850px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.08);
+        }
+
+        /* === COLORES OFICIALES === */
+        :root {
+            --granate: #901c3c;
+            --rojo: #c12044;
+            --dorado: #b79252;
+            --gris-texto: #333333;
+            --borde-tabla: #222;
+        }
+
+        /* === ENCABEZADO === */
+        .cabecera-superior {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .escudo-izq {
+            width: 90px;
+            height: 90px;
+            border: 3px solid var(--dorado);
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo-central {
+            text-align: center;
+        }
+        .logo-central .simbolo {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 8px;
+            position: relative;
+        }
+        .logo-central .simbolo svg {
+            width: 100%;
+            height: 100%;
+        }
+        .gob-cdmx {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--gris-texto);
+            line-height: 1.2;
+        }
+        .anio-2026 {
+            font-size: 42px;
+            font-weight: 900;
+            color: var(--granate);
+        }
+        .folio-der {
+            text-align: right;
+            font-size: 15px;
+            color: var(--gris-texto);
+        }
+        .folio-der strong {
+            color: var(--granate);
+        }
+
+        .fecha-oficio {
+            font-size: 14px;
+            margin: 12px 0;
+            color: var(--gris-texto);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 26px;
+            text-transform: uppercase;
+            color: #000;
+            margin: 20px 0;
+            line-height: 1.3;
+        }
+
+        .subtitulo {
+            text-align: center;
+            font-size: 13px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            color: #444;
+        }
+
+        /* === FORMULARIO VALIDACIÓN === */
+        .caja-validacion {
+            background: #fafafa;
+            border: 2px solid var(--granate);
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 4px;
+        }
+        .caja-validacion h3 {
+            text-align: center;
+            color: var(--granate);
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .input-grupo {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #999;
+            border-radius: 4px;
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+        button {
+            width: 100%;
+            background: var(--granate);
+            color: #fff;
+            border: none;
+            padding: 13px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: var(--rojo);
+        }
+        .fecha-actual {
+            text-align: right;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .resultado {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 4px;
+            display: none;
+        }
+        .resultado.ok {
+            display: block;
+            background: #e6ffe6;
+            border: 1px solid #006622;
+            color: #004411;
+        }
+        .resultado.error {
+            display: block;
+            background: #ffe6e6;
+            border: 1px solid #990000;
+            color: #660000;
+        }
+
+        /* === TABLA DATOS VEHÍCULO === */
+        .tabla-datos {
+            width: 100%;
+            border-collapse: collapse;
+            border: 2px solid var(--borde-tabla);
+            margin: 20px 0;
+        }
+        .tabla-datos td {
+            border: 1px solid var(--borde-tabla);
+            padding: 10px 12px;
+            font-size: 15px;
+        }
+        .tabla-datos td strong {
+            display: inline-block;
+            min-width: 110px;
+            color: #000;
+        }
+
+        /* === TEXTO CUERPO === */
+        .texto-cuerpo {
+            font-size: 15px;
+            line-height: 1.6;
+            text-align: justify;
+            margin: 20px 0;
+        }
+        .atentamente {
+            text-align: center;
+            margin: 30px 0;
+            font-size: 15px;
+        }
+        .firmas {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 40px;
+            gap: 20px;
+        }
+        .firma-izq, .firma-der {
+            text-align: center;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .escudo-cdmx-pie {
+            width: 100px;
+            height: 100px;
+            border: 2px solid var(--granate);
+            margin: 0 auto 8px;
+        }
+        .valido-pie {
+            text-align: right;
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--granate);
+            margin-top: 20px;
+        }
+        .fecha-vigencia {
+            text-align: right;
+            font-size: 16px;
+            color: #000;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        .validacion-matrix {
+            font-size: 11px;
+            color: #666;
+            margin-top: 30px;
+        }
+
+        /* === RESPONSIVO === */
+        @media (max-width: 600px) {
+            .cabecera-superior { flex-direction: column; gap: 15px; text-align: center; }
+            .folio-der { text-align: center; margin-top: 10px; }
+            h1 { font-size: 20px; }
+            .firmas { justify-content: center; }
+            .contenedor { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="contenedor">
+
+    <!-- === FECHA Y HORA ACTUAL EN VIVO === -->
+    <div class="fecha-actual" id="fechaActual"></div>
+
+    <!-- === CAJA DE VALIDACIÓN DE FOLIO === -->
+    <div class="caja-validacion">
+        <h3>VALIDACIÓN DE FOLIO DEL PERMISO</h3>
+        <div class="input-grupo">
+            <label>Ingresa el número de folio:</label>
+            <input type="text" id="folioInput" placeholder="Ej: PCOC2690" oninput="this.value = this.value.toUpperCase()">
+        </div>
+        <button onclick="validarFolio()">CONSULTAR</button>
+        <div class="resultado" id="resultado"></div>
+    </div>
+
+    <!-- === ENCABEZADO DOCUMENTO === -->
+    <div class="cabecera-superior">
+        <div class="escudo-izq">
+            <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                <rect x="15" y="25" width="50" height="40" fill="#b79252" stroke="#7a5f33" stroke-width="2"/>
+                <polygon points="40,15 15,25 65,25" fill="#b79252" stroke="#7a5f33" stroke-width="2"/>
+                <rect x="25" y="38" width="10" height="15" fill="#7a5f33"/>
+                <rect x="45" y="38" width="10" height="15" fill="#7a5f33"/>
+                <rect x="32" y="45" width="16" height="8" fill="#7a5f33"/>
+            </svg>
+        </div>
+        <div class="logo-central">
+            <div class="simbolo">
+                <svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="45" cy="45" r="40" fill="none" stroke="#c12044" stroke-width="6"/>
+                    <path d="M45 15 L55 35 L75 35 L60 50 L65 70 L45 58 L25 70 L30 50 L15 35 L35 35 Z" fill="#c12044"/>
+                </svg>
+            </div>
+            <div class="gob-cdmx">GOBIERNO DE LA<br>CIUDAD DE MÉXICO</div>
+            <div class="anio-2026">2026</div>
+        </div>
+        <div class="folio-der">
+            FOLIO: <strong>PCOC2690</strong>
+        </div>
+    </div>
+
+    <div class="fecha-oficio">
+        Ciudad de México a 05-Octubre-2026<br>
+        (Oficio No. SEMOVI/DGST/PPCFMX/110426)
+    </div>
+
+    <h1>PERMISO PARA CIRCULAR SIN<br>PLACAS, TARJETA DE CIRCULACIÓN Y<br>ENGOMADO</h1>
+
+    <p class="subtitulo">ESTE DOCUMENTO ES VALIDO EN ORIGINAL Y/O EN SU FORMA DIGITAL - SECRETARÍA DE MOVILIDAD DE LA CIUDAD DE MÉXICO</p>
+
+    <!-- === TABLA DE DATOS DEL VEHÍCULO === -->
+    <table class="tabla-datos">
+        <tr>
+            <td><strong>MARCA:</strong> ITALIKA</td>
+            <td><strong>SERIE:</strong> LLCK5GLK4PA101149</td>
+        </tr>
+        <tr>
+            <td><strong>COLOR:</strong> ROJO</td>
+            <td><strong>MOTOR:</strong> LC178MN02761203</td>
+        </tr>
+        <tr>
+            <td><strong>TIPO:</strong> DEPORTIVA</td>
+            <td><strong>LÍNEA:</strong> VORT - X300R</td>
+        </tr>
+        <tr>
+            <td><strong>AÑO:</strong> 2023</td>
+            <td><strong>CILINDRAJE:</strong> 300CC</td>
+        </tr>
+    </table>
+
+    <p style="text-align:center; font-weight:bold; font-size:16px; margin:15px 0;">EL PRESENTE DOCUMENTO SOLO ES VALIDO EN ORIGINAL Y / Ó FORMATO DIGITAL Y TIENE UNA VIGENCIA DE 90 DÍAS , APARTIR DE SU FECHA DE EMISIÓN</p>
+
+    <div class="texto-cuerpo">
+        Lo anterior con fundamento en el artículo 7, fracción I, IV, V, X, XI, XVIII, 200 XXII, XXXIII, XOXX, XI.VII, artículos 21, 20, 51, 52, 54, 55, 58, 57, 62, 64, 65, 67, 158, fracciones I, II, II, IV, VII, IX, X, XM, párrafo en último, de la ley de transporte y validad del Distrito Federal 23, 29, 34, 40, 74, 75, 90 del melamento de transporte del Distrito Federal artículo 242 fracción V del código financiero del Distrito Federal
+    </div>
+
+    <div class="atentamente">
+        SIN MÁS POR EL MOMENTO RECIBA CORDIALES SALUDOS<br><br>
+        <strong>ATENTAMENTE</strong><br><br>
+        MTRO. ANDRES LAJOUS LOAEZA<br>
+        SECRETARIO DE MOVILIDAD DE LA CIUDAD DE MÉXICO<br><br>
+        Álvaro Obregón 260 Piso 3<br>
+        Col. Roma Delegación Cuauhtémoc Cp 05700<br>
+        TEL.55523331 EXT.1460
+    </div>
+
+    <div class="firmas">
+        <div class="firma-izq">
+            <div class="escudo-cdmx-pie">
+                <svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="45" cy="45" r="40" fill="none" stroke="#901c3c" stroke-width="5"/>
+                    <path d="M45 15 L55 35 L75 35 L60 50 L65 70 L45 58 L25 70 L30 50 L15 35 L35 35 Z" fill="#901c3c"/>
+                </svg>
+            </div>
+            <div class="validacion-matrix">VALIDACIÓN • DATA MATRIX<br>USO EXCLUSIVO: SEMOVI</div>
+        </div>
+        <div class="firma-der">
+            <svg width="110" height="110" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+                <rect x="5" y="5" width="100" height="100" fill="#fff" stroke="#901c3c" stroke-width="2"/>
+                <circle cx="35" cy="40" r="18" fill="none" stroke="#901c3c" stroke-width="2"/>
+                <path d="M60 25 L85 55 L60 85 L35 55 Z" fill="none" stroke="#901c3c" stroke-width="2"/>
+                <circle cx="78" cy="28" r="15" fill="#f2c94c" stroke="#901c3c" stroke-width="2"/>
+                <circle cx="82" cy="24" r="4" fill="#901c3c"/>
+                <circle cx="74" cy="24" r="4" fill="#901c3c"/>
+                <circle cx="78" cy="34" r="4" fill="#901c3c"/>
+            </svg>
+            <strong>CIUDAD DE MÉXICO</strong><br>
+            CAPITAL DE LA TRANSFORMACIÓN<br><br>
+            SECRETARÍA DE MOVILIDAD DE LA CIUDAD DE MÉXICO<br>
+            DOCUMENTO VÁLIDO: DIGITAL/FÍSICO
+        </div>
+    </div>
+
+    <div class="valido-pie">VÁLIDO A PARTIR</div>
+    <div class="fecha-vigencia">05-10-2026 AL 05-01-2027</div>
+
+</div>
+
+<script>
+// === FECHA Y HORA ACTUALIZADA EN TIEMPO REAL ===
+function actualizarFechaHora() {
+    const ahora = new Date();
+    const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    const fechaFormateada = ahora.toLocaleDateString('es-MX', opciones);
+    document.getElementById('fechaActual').innerHTML = '<strong>Fecha y hora de consulta:</strong> ' + fechaFormateada;
+}
+actualizarFechaHora();
+setInterval(actualizarFechaHora, 1000);
+
+// === VALIDACIÓN DE FOLIO ===
+const FOLIO_CORRECTO = "PCOC2690";
+
+function validarFolio() {
+    const folioIngresado = document.getElementById('folioInput').value.trim();
+    const resultado = document.getElementById('resultado');
+    
+    if (folioIngresado === '') {
+        resultado.className = 'resultado error';
+        resultado.innerHTML = '⚠️ Por favor ingresa un número de folio';
+        return;
+    }
+    
+    if (folioIngresado === FOLIO_CORRECTO) {
+        resultado.className = 'resultado ok';
+        resultado.innerHTML = '✅ <strong>FOLIO VÁLIDO</strong><br><br>' +
+            '• Folio: ' + FOLIO_CORRECTO + '<br>' +
+            '• Vehículo: ITALIKA VORT-X300R<br>' +
+            '• Serie: LLCK5GLK4PA101149<br>' +
+            '• Vigencia: 05-10-2026 al 05-01-2027<br>' +
+            '• Estado: <strong>VIGENTE</strong>';
+    } else {
+        resultado.className = 'resultado error';
+        resultado.innerHTML = '❌ <strong>FOLIO NO ENCONTRADO</strong><br><br>' +
+            'El folio ingresado no corresponde a ningún permiso registrado.<br>' +
+            'Verifica que lo hayas escrito correctamente.';
+    }
+}
+</script>
+
+</body>
+</html>
